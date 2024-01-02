@@ -1,120 +1,121 @@
-# This is a demo config to show some of the most important commands more easily.
-# This is meant to be changed and configured, as it is intentionally kept sparse.
-# For a more advanced configuration example see my dotfiles:
-# https://github.com/FelixKratz/dotfiles
+#!/usr/bin/env zsh
+
+LABEL_FONT_FACE="GT America Rg"
+ICON_FONT_FACE="Hack Nerd Font"
 
 PLUGIN_DIR="$CONFIG_DIR/plugins"
+PLUGIN_SHARED_DIR="$CONFIG_DIR/plugins"
 
-##### Bar Appearance #####
-# Configuring the general appearance of the bar, these are only some of the
-# options available. For all options see:
-# https://felixkratz.github.io/SketchyBar/config/bar
-# If you are looking for other colors, see the color picker:
-# https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
+SPOTIFY_EVENT="com.spotify.client.PlaybackStateChanged"
 
+sketchybar --bar \
+  height=20 \
+  color=0x00000000 \
+  margin=0 \
+  sticky=on \
+  padding_left=40 \
+  padding_right=40 \
+  notch_width=188 \
+  y_offset=6
 
-sketchybar --bar height=25        \
-                 blur_radius=0   \
-                 position=top     \
-                 sticky=off       \
-                 padding_left=2  \
-                 padding_right=2 \
-                 color=0x00ffffff \
-                 margin=4 \
-                 corner_radius=8
+# Alternatiive background colors
+# label.color=0xffffffff
+# background.color=0x9924273a
+sketchybar --default \
+  background.color=0x66494d64 \
+  background.corner_radius=8 \
+  background.padding_right=5 \
+  background.height=20 \
+  icon.font="$ICON_FONT_FACE:Medium:15.0" \
+  icon.padding_left=5 \
+  icon.padding_right=5 \
+  label.font="$ICON_FONT_FACE:Medium:12.0" \
+  label.color=0xffcad3f5 \
+  label.y_offset=0 \
+  label.padding_left=0 \
+  label.padding_right=5
 
-##### Changing Defaults #####
-# We now change some default values that are applied to all further items
-# For a full list of all available item properties see:
-# https://felixkratz.github.io/SketchyBar/config/items
+sketchybar --add event spotify_change $SPOTIFY_EVENT \
+  --add item spotify e \
+  --set spotify \
+  icon= \
+  icon.y_offset=1 \
+  icon.font="$ICON_FONT_FACE:Bold:20.0" \
+  label.drawing=off \
+  label.padding_left=3 \
+  script="$PLUGIN_DIR/spotify.sh" \
+  --subscribe spotify spotify_change mouse.clicked
 
-sketchybar --default icon.font="Hack Nerd Font:Bold:17.0"  \
-                     icon.color=0xffffffff                 \
-                     label.font.family="GT America Rg" \
-                     label.font.size="16" \
-                     label.font.style="bold"\
-                     label.color=0xffffffff                \
-                     padding_left=5                        \
-                     padding_right=5                       \
-                     label.padding_left=4                 \
-                     label.padding_right=4                 \
-                     icon.padding_left=4                   \
-                     icon.padding_right=4                  
-                     
+sketchybar --add item current_space left \
+  --set current_space \
+  background.color=0xfff5a97f \
+  icon.color=0xff24273a \
+  label.drawing=off \
+  script="$PLUGIN_SHARED_DIR/current_space.sh" \
+  --subscribe current_space space_change mouse.clicked
 
+sketchybar --add item front_app left \
+  --set front_app \
+  background.color=0xffa6da95 \
+  background.padding_left=0 \
+  background.padding_right=0 \
+  icon.y_offset=1 \
+  icon.color=0xff24273a \
+  label.drawing=no \
+  script="$PLUGIN_SHARED_DIR/front_app.sh" \
+  --add item front_app.separator left \
+  --set front_app.separator \
+  background.color=0x00000000 \
+  icon.drawing=no \
+  label.drawing=no \
+  --add item front_app.name left \
+  --set front_app.name \
+  background.color=0x00000000 \
+  background.padding_right=0 \
+  icon.drawing=off \
+  label.font="$LABEL_FONT_FACE:Bold:12.0" \
+  label.drawing=yes
 
-##### Adding Left Items #####
-# We add some regular items to the left side of the bar
-# only the properties deviating from the current defaults need to be set
+sketchybar --add item weather.moon q \
+  --set weather.moon \
+  background.color=0x667dc4e4 \
+  background.padding_right=-1 \
+  icon.color=0xff181926 \
+  icon.font="$ICON_FONT_FACE:Bold:22.0" \
+  icon.padding_left=4 \
+  icon.padding_right=3 \
+  label.drawing=off \
+  --subscribe weather.moon mouse.clicked
 
-sketchybar --add item front_app left                               \
-           --set front_app       script="$PLUGIN_DIR/front_app.sh" \
-                                 icon.drawing=off                  \
-           --subscribe front_app front_app_switched
-23
+sketchybar --add item weather q \
+  --set weather \
+  icon= \
+  icon.color=0xfff5bde6 \
+  icon.font="$ICON_FONT_FACE:Bold:15.0" \
+  update_freq=1800 \
+  script="$PLUGIN_SHARED_DIR/weather.sh" \
+  --subscribe weather system_woke
 
+sketchybar --add bracket front_app_bracket \
+  front_app \
+  front_app.separator \
+  front_app.name \
+  --subscribe front_app front_app_switched
 
-media=(
-  script="$PLUGIN_DIR/media.sh"
-  updates=on
-)
+sketchybar --add item clock right \
+  --set clock \
+  icon=󰃰 \
+  update_freq=10 \
+  script="$PLUGIN_SHARED_DIR/clock.sh"
 
-sketchybar --add item media center \
-           --set media "${media[@]}" \
-           --subscribe media media_change
-##### Adding Right Items #####
-# In the same way as the left items we can add items to the right side.
-# Additional position (e.g. center) are available, see:
-# https://felixkratz.github.io/SketchyBar/config/items#adding-items-to-sketchybar
+sketchybar --add item battery right \
+  --set battery \
+  update_freq=20 \
+  script="$PLUGIN_DIR/battery.sh"
 
-# Some items refresh on a fixed cycle, e.g. the clock runs its script once
-# every 10s. Other items respond to events they subscribe to, e.g. the
-# volume.sh script is only executed once an actual change in system audio
-# volume is registered. More info about the event system can be found here:
-# https://felixkratz.github.io/SketchyBar/config/events
-
-sketchybar -m --add       item               clock             right                                        \
-              --set       clock               update_freq=2                                                 \
-                                             icon.padding_right=0                                          \
-                                             label.padding_left=0                                          \
-                                             script="$PLUGIN_DIR/clock.sh"                 \
-                                                                                                           \
-              --add       item               date             right                                        \
-              --set       date               update_freq=60                                                \
-                                             background.color=0xffe8e8e9                                   \
-                                             label.color=0xff000000                                        \
-                                             label.font="SF Pro:Semibold:12"                               \
-                                             icon.padding_right=0                                          \
-                                             label.padding_left=0                                          \
-                                             background.height=15                                          \
-                                             background.corner_radius=4                                    \
-                                             script="$PLUGIN_DIR/date.sh"
-
-sketchybar --add item battery right                            \
-           --set battery script="$PLUGIN_DIR/battery.sh"       \
-                         update_freq=120                       \
-           --subscribe battery system_woke power_source_change\
-           \
-           --add   item slack right \
-            --set   slack \
-                    update_freq=180 \
-                    script="$PLUGIN_DIR/slack.sh" \
-                    background.padding_left=15  \
-                    icon.font.size=18 \
-           --subscribe slack system_woke \
-           \
-           --add   item telegram right \
-            --set   telegram \
-                    update_freq=180 \
-                    script="$PLUGIN_DIR/telegram.sh" \
-                    background.padding_left=15  \
-                    icon.font.size=18 \
-           --subscribe telegram system_woke
-
-
+# osascript -e 'quit app "Rectangle"'
+# open -a Rectangle
 
 ##### Finalizing Setup #####
-# The below command is only needed at the end of the initial configuration to
-# force all scripts to run the first time, it should never be run in an item script.
-
 sketchybar --update
+sketchybar --trigger space_change
