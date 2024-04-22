@@ -3,11 +3,12 @@ tap "homebrew/cask-fonts"
 tap "1password/tap"
 tap "koekeishiya/formulae"
 tap "FelixKratz/formulae"
+tap "hashicorp/tap"
 
 #brew
 brew "awscli"
 brew "rename"
-brew "terraform"
+brew "hashicorp/tap/terraform"
 brew "zsh"
 brew "zsh-syntax-highlighting"
 brew "deno"
