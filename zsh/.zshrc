@@ -54,5 +54,10 @@ load-nvmrc
 source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $BASEN_CLI_TOOLS/basen.zsh
 pr() {
+ if gh pr view -w; then
+    echo "PR already exists, opening in browser..."
+    return 0
+  fi
+
   gh pr create -t "$1 (preview)" -b "$2" -f
 }
