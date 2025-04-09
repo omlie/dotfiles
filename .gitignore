@@ -1,0 +1,11 @@
+node_modules/
+
+.vscode/
+
+.history/
+out/
+
+*.vsix
+
+.history
+.ionide
