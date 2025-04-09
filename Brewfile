@@ -4,6 +4,7 @@ tap "1password/tap"
 tap "koekeishiya/formulae"
 tap "FelixKratz/formulae"
 tap "hashicorp/tap"
+tap "homebrew/services"
 
 #brew
 brew "awscli"
@@ -50,6 +51,8 @@ cask "rider"
 cask "spotify"
 cask "telegram"
 cask "visual-studio-code"
+cask "vivaldi"
+cask "zen-browser"
 
 #vscode
 vscode "4ops.terraform"
