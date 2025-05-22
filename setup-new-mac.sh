@@ -1,21 +1,28 @@
 #!/bin/bash
-set -e
+set +e  # Disable immediate exit on error
 
-scripts/install_homebrew.sh
-scripts/install_omz.sh
+run_step() {
+    echo "Running: $1"
+    bash -c "$1"
+    if [ $? -ne 0 ]; then
+        echo "⚠️  Failed: $1"
+    fi
+}
+
+run_step "scripts/install_homebrew.sh"
+run_step "scripts/install_omz.sh"
 
 # echo "Git config"
-
-#git config --global user.name "Ole Magnus Lie"
-#git config --global user.email lieolemagnus@gmail.com
+run_step 'git config --global user.name "Ole Magnus Lie"'
+run_step 'git config --global user.email lieolemagnus@gmail.com'
 
 echo "Symlinking dotfiles"
-./symlink-dotfiles.sh
+run_step "./symlink-dotfiles.sh"
 
 echo "Setting ZSH as shell..."
-chsh -s /bin/zsh
-source ~/.zshrc
+chsh -s /bin/zsh || echo "⚠️  Failed to change shell"
+source ~/.zshrc || echo "⚠️  Failed to source .zshrc"
 
-./scripts/set_mac_settings.sh
+run_step "./scripts/set_mac_settings.sh"
 
-echo "Done!"
+echo "✅ Done!"
