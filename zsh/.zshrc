@@ -15,7 +15,6 @@ alias tf="terraform"
 alias gcop="git checkout @{-1}"
 
 export ZSH=$HOME/.oh-my-zsh
-export BASEN_CLI_TOOLS=$HOME/Bekk/Basen/basen-cli-tools
 
 source $ZSH/oh-my-zsh.sh
 
@@ -52,7 +51,6 @@ load-nvmrc
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $BASEN_CLI_TOOLS/basen.zsh
 pr() {
  if gh pr view -w; then
     echo "PR already exists, opening in browser..."
